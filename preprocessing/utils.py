@@ -25,7 +25,7 @@ def convert_pdf2txt(input_path : str, output_path : str) -> None:
       txt_out.write(data)
 
 
-def add_mentions2datasets(path):
+def mentions2datasets(path):
   with open(path + "data_sets.json") as json1:
     datasets = json.load(json1)
   with open(path + "data_set_citations.json") as json2:
