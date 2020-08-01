@@ -2,7 +2,13 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
 from pdfminer.layout import LAParams
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfpage import PDFTextExtractionNotAllowed
+from pdfminer.pdfdevice import PDFDevice
 from io import StringIO
+import glob
+from tqdm import tqdm
 
 from config import params
 
@@ -13,42 +19,40 @@ import os
 
 
 def convert_pdf2txt(input_path : str, output_path : str, verbose=params["DEFAULT_VERBOSE"]) -> None:
-  if verbose:
-    for file in tqdm(Path(input_path).glob('*.pdf'), ascii=True,desc='pdf->txt'):
-      fp = open(file, 'rb')
-      rsrcmgr = PDFResourceManager()
-      retstr = StringIO()
-      codec = 'utf-8'
-      laparams = LAParams()
-      device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-      # Create a PDF interpreter object.
-      interpreter = PDFPageInterpreter(rsrcmgr, device)
-      # Process each page contained in the document.
-      for page in PDFPage.get_pages(fp):
-        interpreter.process_page(page)
+    for file in tqdm(glob.glob(input_path+'*.pdf'), ascii=True,desc='pdf->txt'):
+      try:
+        fp = open(file, 'rb')
+        parser = PDFParser(fp)
+        document = PDFDocument(parser)
+        if not document.is_extractable:
+          raise PDFTextExtractionNotAllowed
+
+        rsrcmgr = PDFResourceManager()
+        device = PDFDevice(rsrcmgr)
+        interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+        retstr = StringIO()
+
+        # codec = 'utf-8' # outdated
+        # laparams = LAParams() # outdated
+        # device = TextConverter(rsrcmgr)
+        # Create a PDF interpreter object.
+
+        # Process each page contained in the document.
+        for page in PDFPage.create_pages(document):
+          interpreter.process_page(page)
+          result = device.get_result()
         data = retstr.getvalue()
-    txt_file = output_path+file.name+'.txt'
-    if txt_file not in os.listdir(output_path):
-      txt_out = open(txt_file, "w")
-      txt_out.write(data)
-  else:
-    for file in Path(input_path).glob('*.pdf'):
-      fp = open(file, 'rb')
-      rsrcmgr = PDFResourceManager()
-      retstr = StringIO()
-      codec = 'utf-8'
-      laparams = LAParams()
-      device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-      # Create a PDF interpreter object.
-      interpreter = PDFPageInterpreter(rsrcmgr, device)
-      # Process each page contained in the document.
-      for page in PDFPage.get_pages(fp):
-        interpreter.process_page(page)
-        data = retstr.getvalue()
-    txt_file = output_path+file.name+'.txt'
-    if txt_file not in os.listdir(output_path):
-      txt_out = open(txt_file, "w")
-      txt_out.write(data)
+        print("RESULT:", result)
+        print("DATA:",data)
+        txt_file = output_path + file.split("/")[-1] + '.txt'
+        if txt_file not in os.listdir(output_path):
+          txt_out = open(txt_file, "w")
+          txt_out.write(data)
+      except Exception as e:
+        print(e)
+        print("Text document could not be created from %s" %(file))
+
 
 def mentions2datasets(path):
   with open(path + "data_sets.json") as json1:

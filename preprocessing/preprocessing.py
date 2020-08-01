@@ -1,4 +1,5 @@
 import os
+from subprocess import Popen
 import argparse
 import json
 import time
@@ -215,10 +216,8 @@ def split_doc_paragraphs(src, dest, remove_stopwords = params["REMOVE_STOPWORDS"
                     split = word.split("\n")
                     if split[0] not in stop_words:
                         newtxt += split[0] + "\n"
-                        continue
                     else:
                         newtxt += "\n"
-                        continue
                     if split[1] not in stop_words:
                         newtxt += split[1] + " "
                         continue
@@ -262,15 +261,44 @@ def main(process_citations, process_publications, pdf2txt, split_paragraphs, ver
         process_zotero_publications(params["ZOTERO_PATH"], list(articles.keys()), articles, attachments, lookup_child_links)
 
     if pdf2txt:
+        sub_n = params["SUBPROC"]
         if verbose:
             print("CONVERTING PDF TO TXT")
-        convert_pdf2text("data/PDF/", "data/text/") # Takes forever to do, make sure to make this optional in mainfile
-        assert len(os.listdir("data/PDF")) == len(os.listdir("data/text")) # Make sure no doc was lost
+
+        pdf_files = glob.glob("data/pdf/"+'*pdf')
+        converts = []
+        for i in range(len(pdf_files)):
+            input_file = pdf_files[i]
+            output_file = "data/text/"+input_file.split("/")[-1]+".txt"
+            if i % sub_n == 0:
+                commands = []
+                command = ["pdf2txt.py", "-o", output_file, input_file]
+                commands.append(command)
+            elif i % sub_n == sub_n - 1:
+                command = ["pdf2txt.py", "-o", output_file, input_file]
+                commands.append(command)
+                converts.append(commands)
+            elif i == len(pdf_files) - 1:
+                command = ["pdf2txt.py", "-o", output_file, input_file]
+                commands.append(command)
+                converts.append(commands)
+            else:
+                command = ["pdf2txt.py", "-o", output_file, input_file]
+                commands.append(command)
+        print("Running %s processes at once to convert pdfs" %sub_n)
+        for commands in tqdm(converts, ascii=True, desc='pdf->txt'):
+            try:
+                procs = [Popen(i) for i in commands]
+                for p in procs:
+                    p.wait()
+            except Exception as e:
+                print(e)
+        # assert len(os.listdir("data/PDF")) == len(os.listdir("data/text")) # Make sure no doc was lost
 
     if split_paragraphs:
         if verbose:
-            print("CONVERTING PDF TO TXT")
-        split_doc_paragraphs("data/PDF", "data/processed_text")
+            print("SPLITTING PARAGRAPHS")
+        split_doc_paragraphs("data/text/", "data/processed_text/")
 
 
 if __name__ == "__main__":

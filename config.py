@@ -3,7 +3,8 @@
 params = {
     'DEFAULT_VERBOSE' : 1, # Sets the default verbosity for all functions
     # Zotero Parameters
-    'ZOTERO_PATH' : '/Users/jhatkins/Zotero/storage',
+    'ZOTERO_PATH' : '/Users/jhatkins/Zotero/storage/',
+    'SUBPROC' : 4,  # Number of subprocesses to run while converting pdfs
     'USER_LIBRARY_KEY' : '6657757',
     'GROUP_LIBRARY_KEY' : '2395775',
     'USER_COLLECTION_ID' : 'H244E5IH',
