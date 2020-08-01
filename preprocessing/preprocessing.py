@@ -81,6 +81,7 @@ def sort_zotero_parts(zotero_items):
 def process_zotero_citations(notes, lookup, data_set_citations_file, verbose=params["DEFAULT_VERBOSE"]):
     citation_list = []
     citation_count = defaultdict(int)
+
     for article in lookup:
         publication_id = article
         for key in lookup[article]:
@@ -111,6 +112,18 @@ def process_zotero_citations(notes, lookup, data_set_citations_file, verbose=par
                     citation_count[tag['tag'].split(":")[1]] += 1
     with open(data_set_citations_file, "w") as fp:
         json.dump(citation_list, fp, indent=4)
+
+    with open("data/json/data_sets.json") as json2:
+        datasets = json.load(json2)
+
+    for dataset in datasets:
+        for citation in citation_list:
+            if citation["data_set_id"] == dataset["data_set_id"]:
+                dataset["mention_list"] += citation["mention_list"]
+    json2.close()
+    with open("data/json/data_sets.json", "w") as jsonout:
+        json.dump(datasets, jsonout, indent=4)
+
     if verbose >= 1:
         print("There were %s total citations found." %len(citation_list))
         if verbose > 1:
@@ -233,7 +246,7 @@ def split_doc_paragraphs(src, dest, remove_stopwords = params["REMOVE_STOPWORDS"
         print("%s documents processed" % len(os.listdir(dest)))
 
 
-def main(process_citations, process_publications, pdf2txt, split_paragraphs, verbose=params["DEFAULT_VERBOSE"]):
+def main(process_citations, process_publications, pdf2txt, split_paragraphs, create_test_lists, verbose=params["DEFAULT_VERBOSE"]):
     library_type = params["LIBRARY_TYPE"]
     api_key = params["ZOTERO_API_KEY"]
     if library_type == 'group':
@@ -300,13 +313,13 @@ def main(process_citations, process_publications, pdf2txt, split_paragraphs, ver
             print("SPLITTING PARAGRAPHS")
         split_doc_paragraphs("data/text/", "data/processed_text/")
 
+    if create_test_lists:
+        create_test()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        '--load_json'
-    )
     parser.add_argument(
         '--process_citations'
     )
@@ -319,6 +332,10 @@ if __name__ == "__main__":
     parser.add_argument(
         '--split_paragraphs'
     )
+    parser.add_argument(
+        '--create_test'
+    )
     args = parser.parse_args()
 
-    main(int(args.process_citations), int(args.process_publications), int(args.pdf2txt), int(args.split_paragraphs))
+    main(int(args.process_citations), int(args.process_publications), int(args.pdf2txt),
+         int(args.split_paragraphs), int(args.create_test))

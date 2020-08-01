@@ -1,14 +1,14 @@
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
-from pdfminer.layout import LAParams
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.pdfdevice import PDFDevice
+
 from io import StringIO
 import glob
 from tqdm import tqdm
+import random
 
 from config import params
 
@@ -33,10 +33,6 @@ def convert_pdf2txt(input_path : str, output_path : str, verbose=params["DEFAULT
 
         retstr = StringIO()
 
-        # codec = 'utf-8' # outdated
-        # laparams = LAParams() # outdated
-        # device = TextConverter(rsrcmgr)
-        # Create a PDF interpreter object.
 
         # Process each page contained in the document.
         for page in PDFPage.create_pages(document):
@@ -143,3 +139,41 @@ def create_data_sets(json_cmr_dataset_list, verbose=params["DEFAULT_VERBOSE"]):
     json.dump(dataset_list, fp, indent=4)
 
   return dataset_list
+
+def create_test(test_size=params["TEST_SIZE"], val_size=params["VALIDATION_SIZE"],
+                seed=params["RANDOM_SEED"], verbose=params["DEFAULT_VERBOSE"]):
+
+  random.seed(seed)
+  with open("data/json/publications.json") as file:
+    publications = json.load(file)
+
+  loaded_txt = os.listdir("data/processed_text")
+  if verbose:
+    print("There are %s processed text documents" %len(loaded_txt))
+  test = []
+  validation = []
+  train = []
+  for pub in publications:
+    if pub['publication_id'] +".pdf.txt" not in loaded_txt:
+      continue
+    num = random.randint(0, 100)
+    if pub not in test and num < test_size * 100 and pub not in train and pub not in validation:
+      test.append(pub)
+    elif pub not in train and pub not in test and num > 100 - val_size * 100:
+      validation.append(pub)
+    elif pub not in train and pub not in validation:
+      train.append(pub)
+  if verbose:
+    print("There were %s documents chosen for test, %s for validation and %s document to train"
+        % (len(test), len(validation), len(train)))
+
+  with open("data/json/publications_test.json", "w") as testout:
+    json.dump(test, testout, indent=4)
+  with open("data/json/publications_dev.json", "w") as valout:
+    json.dump(validation, valout, indent=4)
+  with open("data/json/publications_train.json", "w") as trainout:
+    json.dump(train, trainout, indent=4)
+
+  testout.close()
+  valout.close()
+  trainout.close()
