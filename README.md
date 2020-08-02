@@ -8,7 +8,8 @@ Then export the pythonpath to make sure you can run your modules:
     export PYTHONPATH
 To run the preprocessing code
     1. cd preprocessing
-    2. python preprocessing.py --load_json 1 --process_citations 1 --process_publications 1 --pdf2txt 1 --split_paragraphs 1
+    2. python preprocessing.py --load_json 1 --process_citations 1 
+           --process_publications 1 --pdf2txt 1 --split_paragraphs 1 --create_test 1
     Note: It takes around an hour to process all the PDF's. Edit the subproc param to use more threads
     to find the number of threads to run on run $ sysctl hw.logicalcpu
     
