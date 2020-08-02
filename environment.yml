@@ -18,6 +18,7 @@ dependencies:
       - regex
       - scikit-learn
       - spacy
+      - scispacy
       - tensorboardX
       - bs4
       - fuzzywuzzy
@@ -26,3 +27,5 @@ dependencies:
       - pdfminer
       - xgboost
       - requests-html
+  - spacy:
+        - en_core_web_sm
