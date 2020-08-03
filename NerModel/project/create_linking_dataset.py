@@ -151,7 +151,7 @@ def main(dataset_root: str, output_root: str):
     train_folder_path = os.path.join(dataset_root, "train")
     dev_folder_path = os.path.join(dataset_root, "dev")
     test_folder_path = os.path.join(dataset_root, "test")
-    kb_path = os.path.abspath(os.path.join("project", "data", "data_sets.json"))
+    kb_path = os.path.abspath(os.path.join("data", "data_sets.json"))
 
     train_ner_output_path = os.path.join(train_folder_path, "ner_output_split_train.json")
     dev_ner_output_path = os.path.join(dev_folder_path, "ner_output.json")

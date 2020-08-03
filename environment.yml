@@ -27,5 +27,4 @@ dependencies:
       - pdfminer
       - xgboost
       - requests-html
-  - spacy:
-        - en_core_web_sm
+      - textacy

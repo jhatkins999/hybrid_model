@@ -19,9 +19,9 @@ import logging
 logging.basicConfig(level=logging.ERROR)
 
 # the path to the test publications.json
-PUB_PATH = os.path.abspath(os.path.join("data", "test", "publications_test.json"))
+PUB_PATH = os.path.abspath(os.path.join("data", "test", "publications.json"))
 # the path to the test text files
-TEXT_FILES_PATH = os.path.abspath(os.path.join("data", "test", "input", "files", "text"))
+TEXT_FILES_PATH = os.path.abspath(os.path.join("data", "test"))
 # an instance of SciSpaCyParser
 SCISPACY_PARSER = scispacy_util.SciSpaCyParser()
 
@@ -102,7 +102,8 @@ def parse_publication(publication):
     """
     publication_id = publication["publication_id"]
     datasets_and_mentions = []
-    publication_text_path = os.path.join(TEXT_FILES_PATH, str(publication_id) + ".pdf.txt")
+    publication_text_path = os.path.join(TEXT_FILES_PATH, "input", "files", "text",
+                                         str(publication_id) + ".pdf.txt")
     with open(publication_text_path) as publication_text_file:
         full_text = publication_text_file.read()
         doc = get_scispacy_doc(os.path.join(TEXT_FILES_PATH), publication_id, SCISPACY_PARSER)

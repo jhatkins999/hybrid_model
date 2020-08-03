@@ -6,7 +6,6 @@ from allennlp.models.archival import load_archive
 from allennlp.predictors import Predictor
 from ner_rcc.rcc_ner import RccNerDatasetReader
 from allennlp.common.params import Params
-from allennlp.models import crf_tagger
 import torch.nn.functional as F
 import torch
 
@@ -34,7 +33,7 @@ class NerModel():
             "coding_scheme": "BIOUL",
             "cutoff_sentence_length": 50,
             "filter_sections": False,
-            "percent_negatives": 100,
+            "percent_negatives": 50,
             "tag_label": "ner",
             "token_indexers": {
                 "token_characters": {
@@ -98,7 +97,7 @@ def softmax(x):
 
 def main():
     # main function for debugging purposes
-    model = NerModel("/data/ner-conll")
+    model = NerModel("/data/test/ner-conll")
     model.predict_from_publication_list()
 
 

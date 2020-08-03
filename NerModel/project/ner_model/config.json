@@ -50,8 +50,8 @@
       "token_embedders": {
         "tokens": {
             "type": "embedding",
-            "embedding_dim": 50,
-            "pretrained_file": "data/glove/glove.6b.50d.txt",
+            "embedding_dim": 300,
+            "pretrained_file": "data/glove/glove.840b.300d.txt",
             "trainable": true
         },
         "token_characters": {
@@ -71,7 +71,7 @@
     },
     "encoder": {
         "type": "lstm",
-        "input_size": 178,
+        "input_size": 428,
         "hidden_size": 200,
         "num_layers": 2,
         "dropout": 0.5,
