@@ -36,7 +36,7 @@ def get_tfidf_vectorizer():
 
 def build_tfidf_vectorizer():
     """Build the tfidf vectorizer based on dataset titles"""
-    kb_path = os.path.abspath(os.path.join("project", "data", "data_sets.json"))
+    kb_path = os.path.abspath(os.path.join("data", "data_sets.json"))
     with open(kb_path) as kb_file_:
         kb = json.load(kb_file_)
 

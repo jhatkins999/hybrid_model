@@ -631,9 +631,9 @@ class RuleBasedModel():
 
 def main():
     # keeping main function around to use for debugging
-    train_path = os.path.abspath(os.path.join("project", "data", "train"))
-    dev_path = os.path.abspath(os.path.join("project", "data", "dev"))
-    kb_path = os.path.abspath(os.path.join("project", "data", "data_sets.json"))
+    train_path = os.path.abspath(os.path.join("data", "train"))
+    dev_path = os.path.abspath(os.path.join("data", "dev"))
+    kb_path = os.path.abspath(os.path.join("data", "data_sets.json"))
     test_path = os.path.abspath(os.path.join("data", "test"))
     model = RuleBasedModel(train_path, dev_path, kb_path, test_path)
     model.compare_mention_lists()
@@ -642,14 +642,14 @@ def main():
     # print(len(predictions))
     # print(predictions)
 
-    publications_path = os.path.abspath(os.path.join("project","data", "test", "publications.json"))
+    publications_path = os.path.abspath(os.path.join("data", "test", "publications.json"))
 
     with open(publications_path) as publications_file:
          json_publications = json.load(publications_file)
-         citation_list = model.predict_from_publications_list(json_publications, "project/data/test")
+         citation_list = model.predict_from_publications_list(json_publications, "data/test")
 
-    # labels_path = os.path.abspath(os.path.join("preprocessing", "data", "json", "data_set_citations.json"))
-    # model.evaluate(citation_list, labels_path)
+    labels_path = os.path.abspath(os.path.join("preprocessing", "data", "json", "data_set_citations.json"))
+    model.evaluate(citation_list, labels_path)
 
 if __name__ == "__main__":
     main()

@@ -97,10 +97,10 @@ def generate_rule_based_dataset(output_path, data_folder_path, gold_labels_path,
        @param: is_dev: whether or not the data being processed is dev data. this impacts
                        which examples the rule based model is allowed to use
     """
-    train_path = os.path.abspath(os.path.join("project", "data", "train"))
-    dev_path = os.path.abspath(os.path.join("project", "data", "dev"))
-    kb_path = os.path.abspath(os.path.join("project", "data", "data_sets.json"))
-    test_path = os.path.abspath(os.path.join("project", "data", "test"))
+    train_path = os.path.abspath(os.path.join("data", "train"))
+    dev_path = os.path.abspath(os.path.join("data", "dev"))
+    kb_path = os.path.abspath(os.path.join("data", "data_sets.json"))
+    test_path = os.path.abspath(os.path.join("data", "test"))
 
     # without the test_path parameter, the rule based model will not use dev examples for training
     if is_dev:
@@ -115,7 +115,7 @@ def generate_rule_based_dataset(output_path, data_folder_path, gold_labels_path,
         print(data_folder_path)
         citation_list = model.predict_from_publications_list(json_publications, data_folder_path)
 
-    with open("project/data/output/ner_output.json") as ner_file_:
+    with open("data/output/ner_output.json") as ner_file_:
         ner_citation_list = json.load(ner_file_)
     
     ner_citation_list, ner_mention_list = project.generate_citations_from_ner_mentions(ner_citation_list, kb_path)
