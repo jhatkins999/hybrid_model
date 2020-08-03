@@ -284,10 +284,10 @@ def main(dev_evaluation, error_analysis, methods_only, holdout_eval, ner_only=Fa
     if dev_evaluation and not ner_only:
         print("DEV SET EVALUATION - citations")
         dev_rule_based_model = RuleBasedModel(train_path, dev_path, kb_path)
-        dev_publications_path = os.path.abspath(os.path.join("project", "data", "dev", "publications.json"))
-        dev_labels_path = os.path.abspath(os.path.join("project", "data", "dev", "data_set_citations.json"))
-        dev_rule_based_output_path = os.path.abspath(os.path.join("project", "data", "dev", "rule_based_output_v10.pkl"))
-        dev_predict_input_path = os.path.abspath(os.path.join("project", "data", "dev"))
+        dev_publications_path = os.path.abspath(os.path.join("data", "dev", "publications.json"))
+        dev_labels_path = os.path.abspath(os.path.join("data", "dev", "data_set_citations.json"))
+        dev_rule_based_output_path = os.path.abspath(os.path.join("data", "dev", "rule_based_output_v10.pkl"))
+        dev_predict_input_path = os.path.abspath(os.path.join("data", "dev"))
         dev_predictions = perform_evaluation(dev_rule_based_model,
                                              xgboost_model,
                                              dev_publications_path,
@@ -299,10 +299,10 @@ def main(dev_evaluation, error_analysis, methods_only, holdout_eval, ner_only=Fa
 
     print("TEST SET EVALUATION - citations")
     test_predictions_mentions = []
-    test_publications_path = os.path.abspath(os.path.join("data", "input", "publications.json"))
+    test_publications_path = os.path.abspath(os.path.join("data", "test", "input", "publications.json"))
     test_labels_path = os.path.abspath(os.path.join("rich-context-competition", "evaluate", "data_set_citations.json"))
-    test_rule_based_output_path = os.path.abspath(os.path.join("project", "data", "test", "rule_based_output_v10.pkl"))
-    test_predict_input_path = os.path.abspath(os.path.join("data"))
+    test_rule_based_output_path = os.path.abspath(os.path.join("data", "test", "rule_based_output_v10.pkl"))
+    test_predict_input_path = os.path.abspath(os.path.join("data", "test"))
 
     # make additional dataset mention predictions using the trained NER model
     model = NerModel("/data/ner-conll", ner_model_path)
