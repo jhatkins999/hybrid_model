@@ -1,0 +1,14 @@
+*.txt
+*.pdf
+*.json
+*.th
+*.p
+*.pt
+*.pkl
+*.conll
+*.gz
+QA_approach/server
+QA_approach/squad
+QA_approach/triviaqa
+QA_approach/elmo
+__pycache__

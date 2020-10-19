@@ -1,0 +1,30 @@
+name: citation_processing
+dependencies:
+  - Python==3.6.10
+  - pip
+  - ca-certificates
+  - jedi
+  - pip:
+      - allennlp==1.0.0rc3
+      - allennlp-models==1.0.0rc3
+      - tqdm
+      - ujson
+      - joblib
+      - jupyter
+      - pandas
+      - tensorflow==1.15
+      - pyzotero
+      - requests
+      - regex
+      - scikit-learn
+      - spacy
+      - scispacy
+      - tensorboardX
+      - bs4
+      - fuzzywuzzy
+      - python-levenshtein
+      - nltk
+      - pdfminer
+      - xgboost
+      - requests-html
+      - textacy
